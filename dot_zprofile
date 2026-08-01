@@ -1,0 +1,17 @@
+# User-local programs should be available before system package managers.
+path=("$HOME/.local/bin" $path)
+
+# Support both Apple Silicon and Intel Homebrew installations.
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+[[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ]] &&
+  path+=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts")
+
+[[ -d /Library/TeX/texbin ]] && path+=(/Library/TeX/texbin)
+
+typeset -U path PATH
+export PATH

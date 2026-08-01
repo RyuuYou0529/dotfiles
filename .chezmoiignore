@@ -1,0 +1,7 @@
+.gitignore
+.gitattributes
+README.md
+dist/
+ref/
+scripts/
+tests/

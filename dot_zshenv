@@ -1,0 +1,2 @@
+# Keep this file safe for interactive and non-interactive shells.
+[[ -r "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
