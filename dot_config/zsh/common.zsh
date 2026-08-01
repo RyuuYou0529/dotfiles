@@ -45,7 +45,7 @@ _dotfiles_update_vcs_info() {
 add-zsh-hook precmd _dotfiles_update_vcs_info
 
 setopt PROMPT_SUBST
-PROMPT=$'%F{cyan}%B%(6~|.../%5~|%~)%b%f ${vcs_info_msg_0_}\n%(?,%F{green},%F{red})%B%(!.#.>)%b%f '
+PROMPT=$'%F{blue}%n@%m%f %F{cyan}%B%(6~|.../%5~|%~)%b%f ${vcs_info_msg_0_}\n%(?,%F{green},%F{red})%B%(!.#.>)%b%f '
 
 _dotfiles_set_terminal_title() {
   print -Pn '\e]0;%~\a'

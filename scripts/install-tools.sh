@@ -188,11 +188,45 @@ github_asset_url() {
 }
 
 check_helix() {
-  has_command hx || has_command helix
+  if has_command hx; then
+    hx --version >/dev/null 2>&1
+  elif has_command helix; then
+    helix --version >/dev/null 2>&1
+  else
+    return 1
+  fi
 }
 
 check_yazi() {
-  has_command yazi && has_command ya
+  has_command yazi && has_command ya &&
+    yazi --version >/dev/null 2>&1 && ya --version >/dev/null 2>&1
+}
+
+install_helix_apt() {
+  install_system_package software-properties-common || return 1
+  authorize_sudo || return 1
+  run_privileged add-apt-repository -y ppa:maveonair/helix-editor || return 1
+  run_privileged apt-get update || return 1
+  run_privileged apt-get install -y helix
+}
+
+install_yazi_apt() {
+  ensure_temp_dir || return 1
+  authorize_sudo || return 1
+
+  curl -fsSL https://yazi-rs.github.io/builds/yazi-keyring.gpg \
+    -o "$temp_dir/yazi-keyring.gpg" || return 1
+  run_privileged install -m 0644 "$temp_dir/yazi-keyring.gpg" \
+    /usr/share/keyrings/yazi-keyring.gpg || return 1
+
+  printf '%s\n' \
+    'deb [signed-by=/usr/share/keyrings/yazi-keyring.gpg] https://yazi-rs.github.io/builds/ stable main' \
+    >"$temp_dir/yazi.list" || return 1
+  run_privileged install -m 0644 "$temp_dir/yazi.list" \
+    /etc/apt/sources.list.d/yazi.list || return 1
+
+  run_privileged apt-get update || return 1
+  run_privileged apt-get install -y yazi
 }
 
 install_chezmoi_binary() {
@@ -241,7 +275,7 @@ install_yazi_binary() {
 
   ensure_temp_dir || return 1
   asset_url=$(github_asset_url sxyazi/yazi \
-    "/yazi-${release_arch}-unknown-linux-gnu\\.zip$") || return 1
+    "/yazi-${release_arch}-unknown-linux-musl\\.zip$") || return 1
   [ -n "$asset_url" ] || return 1
 
   archive="$temp_dir/yazi.zip"
@@ -294,6 +328,9 @@ install_helix() {
     Darwin:brew|Linux:dnf|Linux:pacman)
       install_system_package helix && helix_installed=1
       ;;
+    Linux:apt)
+      install_helix_apt && helix_installed=1
+      ;;
   esac
 
   if { [ "$helix_installed" -eq 0 ] || ! check_helix; } && [ "$os_name" = 'Linux' ]; then
@@ -323,6 +360,9 @@ install_yazi() {
   case "$os_name:$package_manager" in
     Darwin:brew|Linux:pacman)
       install_system_package yazi && yazi_installed=1
+      ;;
+    Linux:apt)
+      install_yazi_apt && yazi_installed=1
       ;;
   esac
 

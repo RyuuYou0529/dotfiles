@@ -39,7 +39,9 @@ chsh -s "$(command -v zsh)"
 The zsh plugins are vendored in this repository and are never downloaded during
 installation. On Linux, chezmoi, Helix, and Yazi can fall back to their official
 release installers or binaries when the system package is unavailable. Snap is
-not used.
+not used. Ubuntu installs Yazi from the official Yazi APT repository and Helix
+from the third-party PPA documented by the Helix project. The Yazi binary fallback
+uses the musl build to avoid host GLIBC version mismatches.
 
 ## Apply from this checkout
 

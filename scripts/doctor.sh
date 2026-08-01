@@ -21,11 +21,27 @@ check_optional() {
   fi
 }
 
+check_optional_runnable() {
+  if command -v "$1" >/dev/null 2>&1; then
+    if "$1" --version >/dev/null 2>&1; then
+      printf 'ok       %-24s %s\n' "$1" "$(command -v "$1")"
+    else
+      printf 'broken   %-24s cannot execute\n' "$1"
+      failed=1
+    fi
+  else
+    printf 'optional %-24s not installed\n' "$1"
+  fi
+}
+
 check_optional_editor() {
-  if command -v hx >/dev/null 2>&1; then
+  if command -v hx >/dev/null 2>&1 && hx --version >/dev/null 2>&1; then
     printf 'ok       %-24s %s\n' 'helix (hx)' "$(command -v hx)"
-  elif command -v helix >/dev/null 2>&1; then
+  elif command -v helix >/dev/null 2>&1 && helix --version >/dev/null 2>&1; then
     printf 'ok       %-24s %s\n' 'helix' "$(command -v helix)"
+  elif command -v hx >/dev/null 2>&1 || command -v helix >/dev/null 2>&1; then
+    printf 'broken   %-24s cannot execute\n' 'helix'
+    failed=1
   else
     printf 'optional %-24s not installed\n' 'helix'
   fi
@@ -37,8 +53,8 @@ check_required git
 check_required curl
 check_optional fzf
 check_optional_editor
-check_optional yazi
-check_optional ya
+check_optional_runnable yazi
+check_optional_runnable ya
 check_optional conda
 
 if command -v fzf >/dev/null 2>&1; then

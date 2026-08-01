@@ -31,6 +31,9 @@ if grep -q 'snap install' "$repo_dir/scripts/install-tools.sh"; then
   echo 'Snap must not be used by the tool installer.' >&2
   exit 1
 fi
+grep -q 'ppa:maveonair/helix-editor' "$repo_dir/scripts/install-tools.sh"
+grep -q 'https://yazi-rs.github.io/builds/' "$repo_dir/scripts/install-tools.sh"
+grep -q 'unknown-linux-musl' "$repo_dir/scripts/install-tools.sh"
 
 mkdir -p "$test_home"
 run_chezmoi --source "$repo_dir" --destination "$test_home" apply
