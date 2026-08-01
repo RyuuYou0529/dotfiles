@@ -1,9 +1,15 @@
 # fzf provides fuzzy history search with Ctrl-R and optional file/directory pickers.
 export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --color=light'
 
-if [[ -o zle && -t 0 && -t 1 ]] &&
-  command -v fzf >/dev/null 2>&1 && fzf --zsh >/dev/null 2>&1; then
-  source <(fzf --zsh)
+if [[ -o zle && -t 0 && -t 1 ]] && command -v fzf >/dev/null 2>&1; then
+  if fzf --zsh >/dev/null 2>&1; then
+    source <(fzf --zsh)
+  else
+    [[ -r /usr/share/doc/fzf/examples/completion.zsh ]] &&
+      source /usr/share/doc/fzf/examples/completion.zsh
+    [[ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]] &&
+      source /usr/share/doc/fzf/examples/key-bindings.zsh
+  fi
 fi
 
 # Yazi wrapper: leave Yazi in the directory selected before quitting.

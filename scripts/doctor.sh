@@ -21,13 +21,35 @@ check_optional() {
   fi
 }
 
+check_optional_editor() {
+  if command -v hx >/dev/null 2>&1; then
+    printf 'ok       %-24s %s\n' 'helix (hx)' "$(command -v hx)"
+  elif command -v helix >/dev/null 2>&1; then
+    printf 'ok       %-24s %s\n' 'helix' "$(command -v helix)"
+  else
+    printf 'optional %-24s not installed\n' 'helix'
+  fi
+}
+
 check_required zsh
 check_required chezmoi
+check_required git
+check_required curl
 check_optional fzf
-check_optional hx
+check_optional_editor
 check_optional yazi
 check_optional ya
 check_optional conda
+
+if command -v fzf >/dev/null 2>&1; then
+  if fzf --zsh >/dev/null 2>&1; then
+    printf 'ok       %-24s modern integration\n' 'fzf zsh'
+  elif [ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+    printf 'ok       %-24s distribution fallback\n' 'fzf zsh'
+  else
+    printf 'warning  %-24s integration unavailable\n' 'fzf zsh'
+  fi
+fi
 
 for file in \
   "$repo_dir/dot_config/zsh/vendor/zsh-autosuggestions/zsh-autosuggestions.zsh" \

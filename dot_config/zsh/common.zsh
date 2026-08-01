@@ -3,6 +3,8 @@ export LANG="${LANG:-en_US.UTF-8}"
 
 if command -v hx >/dev/null 2>&1; then
   export EDITOR='hx'
+elif command -v helix >/dev/null 2>&1; then
+  export EDITOR='helix'
 elif command -v vim >/dev/null 2>&1; then
   export EDITOR='vim'
 else
@@ -30,9 +32,21 @@ compinit
 zstyle ':completion:*' menu select
 
 # Small, dependency-free prompt.
-PROMPT=$'%F{cyan}%B%(6~|.../%5~|%~)%b%f\n%(?,%F{green},%F{red})%B%(!.#.>)%b%f '
+autoload -Uz add-zsh-hook vcs_info
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr '+'
+zstyle ':vcs_info:git:*' unstagedstr '*'
+zstyle ':vcs_info:git:*' formats '%F{yellow}git:%b%c%u%f'
+zstyle ':vcs_info:git:*' actionformats '%F{yellow}git:%b|%a%c%u%f'
 
-autoload -Uz add-zsh-hook
+_dotfiles_update_vcs_info() {
+  vcs_info
+}
+add-zsh-hook precmd _dotfiles_update_vcs_info
+
+setopt PROMPT_SUBST
+PROMPT=$'%F{cyan}%B%(6~|.../%5~|%~)%b%f ${vcs_info_msg_0_}\n%(?,%F{green},%F{red})%B%(!.#.>)%b%f '
+
 _dotfiles_set_terminal_title() {
   print -Pn '\e]0;%~\a'
 }

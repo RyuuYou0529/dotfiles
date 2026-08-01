@@ -15,6 +15,31 @@ Small, explicit terminal configuration for macOS and Linux, managed by chezmoi.
 
 There is no shell framework or plugin manager. Shell startup never downloads files.
 
+## Install tools
+
+Run the cross-platform installer from this checkout:
+
+```sh
+./scripts/install-tools.sh
+```
+
+The installer detects macOS, Debian/Ubuntu, Fedora/RHEL, Arch Linux, and openSUSE
+package managers. Existing commands are skipped. A failed installation is reported,
+then the installer continues with the next tool.
+
+Before the first system package installation, the script asks for confirmation and
+then lets `sudo` request the password. User-level fallbacks are installed in
+`~/.local/bin`. The installer does not change the login shell. Run this manually if
+zsh is not already the login shell:
+
+```sh
+chsh -s "$(command -v zsh)"
+```
+
+The zsh plugins are vendored in this repository and are never downloaded during
+installation. On Linux, chezmoi, Helix, and Yazi can fall back to their official
+release installers or binaries when the system package is unavailable.
+
 ## Apply from this checkout
 
 Review the changes first:
@@ -48,6 +73,22 @@ PROXY_AUTO_ENABLE=1
 CONDA_ROOT='/opt/miniforge3'
 ```
 
+Linux machines are initially created with these workstation defaults:
+
+```zsh
+PROXY_HTTP_URL='http://127.0.0.1:20171'
+PROXY_SOCKS_URL='socks5h://127.0.0.1:20170'
+CONDA_ROOT='/opt/miniconda3'
+CUDA_ROOT='/usr/local/cuda'
+NVM_ROOT="$HOME/.nvm"
+DISPLAY_DEFAULT=':0'
+```
+
+CUDA and NVM are configured only when their roots exist. NVM is loaded lazily on
+the first `nvm`, `node`, `npm`, `npx`, or `corepack` command. `DISPLAY_DEFAULT` is
+used only when the environment does not already provide `DISPLAY`, so SSH X11
+forwarding is preserved.
+
 Set `PROXY_AUTO_ENABLE=0` on a machine where the proxy client is not always
 available. Proxy commands are:
 
@@ -71,17 +112,6 @@ hx --tutor
 
 Run Yazi with `y`. If a directory is selected before quitting, the shell changes
 to that directory.
-
-## Optional packages
-
-On macOS:
-
-```sh
-brew install chezmoi fzf helix yazi
-```
-
-The two zsh plugins are already included in this repository and must not be
-installed separately.
 
 ## Offline kit
 

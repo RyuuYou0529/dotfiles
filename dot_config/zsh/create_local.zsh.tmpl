@@ -1,0 +1,23 @@
+# This file is created once and is intentionally not updated by chezmoi.
+# Adjust these values for each machine.
+{{ if eq .chezmoi.os "linux" -}}
+PROXY_HTTP_URL='http://127.0.0.1:20171'
+PROXY_SOCKS_URL='socks5h://127.0.0.1:20170'
+PROXY_NO_PROXY='localhost,127.0.0.1,::1'
+PROXY_AUTO_ENABLE=1
+
+CONDA_ROOT='/opt/miniconda3'
+CUDA_ROOT='/usr/local/cuda'
+NVM_ROOT="$HOME/.nvm"
+DISPLAY_DEFAULT=':0'
+{{ else -}}
+PROXY_HTTP_URL='http://127.0.0.1:7897'
+PROXY_SOCKS_URL='socks5h://127.0.0.1:7897'
+PROXY_NO_PROXY='localhost,127.0.0.1,::1'
+PROXY_AUTO_ENABLE=1
+
+CONDA_ROOT='/opt/miniforge3'
+CUDA_ROOT=''
+NVM_ROOT=''
+DISPLAY_DEFAULT=''
+{{ end -}}
