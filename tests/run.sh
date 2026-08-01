@@ -27,6 +27,10 @@ do
   zsh -n "$file"
 done
 sh -n "$repo_dir/scripts/install-tools.sh"
+if grep -q 'snap install' "$repo_dir/scripts/install-tools.sh"; then
+  echo 'Snap must not be used by the tool installer.' >&2
+  exit 1
+fi
 
 mkdir -p "$test_home"
 run_chezmoi --source "$repo_dir" --destination "$test_home" apply

@@ -38,7 +38,8 @@ chsh -s "$(command -v zsh)"
 
 The zsh plugins are vendored in this repository and are never downloaded during
 installation. On Linux, chezmoi, Helix, and Yazi can fall back to their official
-release installers or binaries when the system package is unavailable.
+release installers or binaries when the system package is unavailable. Snap is
+not used.
 
 ## Apply from this checkout
 

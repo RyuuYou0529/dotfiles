@@ -294,11 +294,6 @@ install_helix() {
     Darwin:brew|Linux:dnf|Linux:pacman)
       install_system_package helix && helix_installed=1
       ;;
-    Linux:apt|Linux:zypper)
-      if has_command snap && authorize_sudo; then
-        run_privileged snap install --classic helix && helix_installed=1
-      fi
-      ;;
   esac
 
   if { [ "$helix_installed" -eq 0 ] || ! check_helix; } && [ "$os_name" = 'Linux' ]; then
@@ -328,11 +323,6 @@ install_yazi() {
   case "$os_name:$package_manager" in
     Darwin:brew|Linux:pacman)
       install_system_package yazi && yazi_installed=1
-      ;;
-    Linux:apt|Linux:dnf|Linux:zypper)
-      if has_command snap && authorize_sudo; then
-        run_privileged snap install --classic yazi && yazi_installed=1
-      fi
       ;;
   esac
 
