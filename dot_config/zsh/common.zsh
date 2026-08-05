@@ -34,18 +34,40 @@ zstyle ':completion:*' menu select
 # Small, dependency-free prompt.
 autoload -Uz add-zsh-hook vcs_info
 zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' stagedstr '+'
+zstyle ':vcs_info:git:*' stagedstr '*'
 zstyle ':vcs_info:git:*' unstagedstr '*'
-zstyle ':vcs_info:git:*' formats '%F{yellow}git:%b%c%u%f'
-zstyle ':vcs_info:git:*' actionformats '%F{yellow}git:%b|%a%c%u%f'
+zstyle ':vcs_info:git:*' formats '%b%c%u'
+zstyle ':vcs_info:git:*' actionformats '%b|%a%c%u'
 
 _dotfiles_update_vcs_info() {
   vcs_info
+  [[ -n $vcs_info_msg_0_ ]] || return
+
+  local git_status
+  if [[ $vcs_info_msg_0_ == *\** ]]; then
+    vcs_info_msg_0_=${vcs_info_msg_0_//\*/}
+    git_status='%F{#F38BA8}✗%f'
+  else
+    git_status='%F{#A6E3A1}●%f'
+  fi
+  typeset -g vcs_info_msg_0_="%F{#F9E2AF}git:${vcs_info_msg_0_}%f ${git_status}"
 }
 add-zsh-hook precmd _dotfiles_update_vcs_info
 
+case "$OSTYPE" in
+  darwin*) typeset -g _DOTFILES_OS_PROMPT='%F{#CBA6F7}⌘%f' ;;
+  linux*)  typeset -g _DOTFILES_OS_PROMPT='%F{#94E2D5}◆%f' ;;
+  *)       typeset -g _DOTFILES_OS_PROMPT='%F{#94E2D5}◇%f' ;;
+esac
+
+if (( EUID == 0 )); then
+  typeset -g _DOTFILES_USER_PROMPT='%K{#8C2D3B}%F{white} %n %f%k%F{#89B4FA}@%m%f'
+else
+  typeset -g _DOTFILES_USER_PROMPT='%F{#89B4FA}%n@%m%f'
+fi
+
 setopt PROMPT_SUBST
-PROMPT=$'%F{blue}%n@%m%f %F{cyan}%B%(6~|.../%5~|%~)%b%f ${vcs_info_msg_0_}\n%(?,%F{green},%F{red})%B%(!.#.>)%b%f '
+PROMPT=$'${_DOTFILES_OS_PROMPT} ${_DOTFILES_USER_PROMPT} %F{#89DCEB}%B%(6~|.../%5~|%~)%b%f ${vcs_info_msg_0_}\n%(?,%F{#A6E3A1},%F{#F38BA8})%B%(!.#.>)%b%f '
 
 _dotfiles_set_terminal_title() {
   print -Pn '\e]0;%~\a'
