@@ -11,7 +11,6 @@ Small, explicit terminal configuration for macOS and Linux, managed by chezmoi.
 - Yazi as the optional terminal file manager
 - proxy helpers, enabled by default
 - lazy Conda initialization
-- global Codex guidance in `~/.codex/AGENTS.md`
 
 There is no shell framework or plugin manager. Shell startup never downloads files.
 
@@ -139,5 +138,5 @@ Tests apply the source state to a temporary home and never modify the live home.
 
 ## Excluded data
 
-The repository intentionally excludes shell history, `ref/`, SSH keys, Codex
-sessions and authentication, secrets, caches, and machine-local proxy credentials.
+The repository intentionally excludes shell history, `ref/`, SSH keys, secrets,
+caches, and machine-local proxy credentials.
