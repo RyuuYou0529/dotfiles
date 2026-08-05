@@ -87,10 +87,10 @@ NVM_ROOT="$HOME/.nvm"
 DISPLAY_DEFAULT=':0'
 ```
 
-CUDA and NVM are configured only when their roots exist. NVM is loaded lazily on
-the first `nvm`, `node`, `npm`, `npx`, or `corepack` command. `DISPLAY_DEFAULT` is
-used only when the environment does not already provide `DISPLAY`, so SSH X11
-forwarding is preserved.
+CUDA and NVM are configured only when their roots exist. NVM is loaded when the
+interactive shell starts so Node.js and global Node.js tools are immediately
+available. `DISPLAY_DEFAULT` is used only when the environment does not already
+provide `DISPLAY`, so SSH X11 forwarding is preserved.
 
 Set `PROXY_AUTO_ENABLE=0` on a machine where the proxy client is not always
 available. Proxy commands are:

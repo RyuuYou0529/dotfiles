@@ -12,20 +12,7 @@ fi
 
 if [[ -n ${NVM_ROOT:-} && -r "$NVM_ROOT/nvm.sh" ]]; then
   export NVM_DIR="$NVM_ROOT"
-
-  _dotfiles_load_nvm() {
-    local requested="$1"
-    shift
-    unfunction nvm node npm npx corepack 2>/dev/null
-    source "$NVM_DIR/nvm.sh" || return
-    "$requested" "$@"
-  }
-
-  nvm() { _dotfiles_load_nvm nvm "$@"; }
-  node() { _dotfiles_load_nvm node "$@"; }
-  npm() { _dotfiles_load_nvm npm "$@"; }
-  npx() { _dotfiles_load_nvm npx "$@"; }
-  corepack() { _dotfiles_load_nvm corepack "$@"; }
+  source "$NVM_DIR/nvm.sh"
 fi
 
 if [[ -z ${DISPLAY:-} && -n ${DISPLAY_DEFAULT:-} ]]; then

@@ -67,6 +67,7 @@ grep -q "PROXY_SOCKS_URL='socks5h://127.0.0.1:20170'" \
 linux_fixture="$test_root/linux"
 mkdir -p "$linux_fixture/cuda/bin" "$linux_fixture/cuda/lib64" "$linux_fixture/nvm"
 printf '%s\n' \
+  'NVM_FIXTURE_LOADED=1' \
   'nvm() { print -r -- "fake nvm"; }' \
   'node() { print -r -- "fake node"; }' \
   'npm() { print -r -- "fake npm"; }' \
@@ -85,6 +86,7 @@ CUDA_ROOT="$linux_fixture/cuda" \
   [[ "$path[1]" == "$CUDA_ROOT/bin" ]]
   [[ ":$LD_LIBRARY_PATH:" == *":$CUDA_ROOT/lib64:"* ]]
   [[ "$DISPLAY" == ":0" ]]
+  [[ "$NVM_FIXTURE_LOADED" == 1 ]]
   [[ "$(node)" == "fake node" ]]
 '
 
